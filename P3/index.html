@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>P3 - ITMO_ICT_WebDevelopment_2022-2023</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">ITMO_ICT_WebDevelopment_2022-2023</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../L1/" class="nav-link">L1</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../L2/" class="nav-link">L2</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">P3</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">L3 <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../L3/about/" class="dropdown-item">about</a>
+</li>
+                                    
+<li>
+    <a href="../L3/endpoints/" class="dropdown-item">endpoints</a>
+</li>
+                                    
+<li>
+    <a href="../L3/views/" class="dropdown-item">views</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../L2/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../L3/about/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#3" class="nav-link">Практическая работа 3</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#_1" class="nav-link">Модели</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#1" class="nav-link">Практическое задание 1:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#2" class="nav-link">Практическое задание 2:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#3_1" class="nav-link">Практическое задание 3:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="3">Практическая работа 3</h1>
+<h2 id="_1">Модели</h2>
+<pre><code class="language-python">class Car(models.Model):
+    number = models.CharField(max_length=10)
+    brand = models.CharField(max_length=32)
+    model = models.CharField(max_length=32)
+    color = models.CharField(max_length=32)
+
+
+class Owner(AbstractUser):
+    surname = models.CharField(max_length=30, null=True, blank=True)
+    name = models.CharField(max_length=30, null=True, blank=True)
+    birth_date = models.DateTimeField(null=True, blank=True)
+    cars = models.ManyToManyField(Car, through='Ownership')
+
+    passport = models.CharField(max_length=11, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    nationality = models.CharField(max_length=30, null=True, blank=True)
+
+
+class Licence(models.Model):
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    number = models.CharField(max_length=10)
+    type = models.CharField(max_length=10)
+    issue_date = models.DateTimeField()
+
+
+class Ownership(models.Model):
+    driver = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    start_date = models.DateTimeField(null=False)
+    expiry_date = models.DateTimeField()
+</code></pre>
+<h2 id="1">Практическое задание 1:</h2>
+<p>Воспользуйтесь проектом из практики 2.1. Напишите запрос на создание 6-7 новых автовладельцев и 5-6 автомобилей, каждому автовладельцу назначьте удостоверение и от 1 до 3 автомобилей. Задание можете выполнить либо в интерактивном режиме интерпретатора, либо в отдельном python-файле. Результатом должны стать запросы и отображение созданных объектов. </p>
+<p><em>Если вы добавляете автомобили владельцу через метод .add(), не забудьте заполнить также ассоциативную сущность “владение”</em></p>
+<pre><code class="language-python"># Автовладельцы
+garrosh = Owner.objects.create(surname='Hellscream', name='Garrosh', username='locktarogar', password='qwerty123', nationality='orc')   
+arthas = Owner.objects.create(surname='Menethil', name='Arthas', username='TheLichKing', password='qwerty123', nationality='human')       
+sylvanas = Owner.objects.create(surname='Windrunner', name='Sylvanas', username='death2u', password='qwerty123', nationality='elf')                   
+illidan = Owner.objects.create(surname='Stormrage', name='Illidan', username='illlidannnn', password='qwerty123', nationality='night elf')    
+jaina = Owner.objects.create(surname='Proudmoore', name='Jaina', username='frostbold', password='qwerty123', nationality='human')
+tyrande = Owner.objects.create(surname='Whisperwind', name='Tyrande', username='yserasdauther', password='qwerty123', nationality='night elf')
+
+# Автомобили
+wolf = Car.objects.create(number='wolf777', brand='horseback riding pets', model='rare wolf', color='grey')
+sindragosa = Car.objects.create(number='Sindragosa', brand='dragon', model='ice dragon', color='white') 
+horse = Car.objects.create(number='deadhorse', brand='horseback riding pets', model='epic horse', color='black') 
+sabertooth = Car.objects.create(number='6s6b6th', brand='horseback riding pets', model='elven sabertooth', color='blue') 
+ysera = Car.objects.create(number='tear3', brand='dragon', model='green dragon', color='green')
+
+# Удостоверения
+l_garrosh = Licence.objects.create(driver=garrosh, number='1', type='riding', issue_date='2000-01-01T00:00:00+00:00')
+l_arthas = Licence.objects.create(driver=arthas, number='2', type='riding', issue_date='2000-01-01T00:00:00+00:00')
+l_arthas = Licence.objects.create(driver=arthas, number='3', type='flying', issue_date='2000-01-01T00:00:00+00:00')
+l_sylvanas = Licence.objects.create(driver=sylvanas, number='4', type='riding', issue_date='2000-01-01T00:00:00+00:00')
+l_illidan = Licence.objects.create(driver=illidan, number='5', type='riding', issue_date='2000-01-01T00:00:00+00:00') 
+l_jaina = Licence.objects.create(driver=jaina, number='6', type='riding', issue_date='2000-01-01T00:00:00+00:00')
+l_tyrande = Licence.objects.create(driver=tyrande, number='7', type='riding', issue_date='2000-01-01T00:00:00+00:00') 
+l_tyrande = Licence.objects.create(driver=tyrande, number='8', type='flying', issue_date='2000-01-01T00:00:00+00:00')
+
+# Владение
+Ownership.objects.create(driver=garrosh, vehicle=wolf, start_date='2000-02-02T00:00:00+00:00', expiry_date='2010-01-01T00:00:00+00:00')
+Ownership.objects.create(driver=arthas, vehicle=sindragosa, start_date='2000-02-02T00:00:00+00:00', expiry_date='2010-01-01T00:00:00+00:00')
+Ownership.objects.create(driver=sylvanas, vehicle=sindragosa, start_date='2010-02-02T00:00:00+00:00', expiry_date='2100-01-01T00:00:00+00:00')
+Ownership.objects.create(driver=illidan, vehicle=horse, start_date='2000-02-02T00:00:00+00:00', expiry_date='2000-03-03T00:00:00+00:00')
+Ownership.objects.create(driver=jaina, vehicle=horse, start_date='2000-04-04T00:00:00+00:00', expiry_date='2100-03-03T00:00:00+00:00')
+Ownership.objects.create(driver=tyrande, vehicle=ysera, start_date='2000-01-01T00:00:00+00:00', expiry_date='2100-03-03T00:00:00+00:00')
+Ownership.objects.create(driver=tyrande, vehicle=sabertooth, start_date='2000-01-01T00:00:00+00:00', expiry_date='2100-03-03T00:00:00+00:00')
+</code></pre>
+<h2 id="2">Практическое задание 2:</h2>
+<p>По созданным в пр.1 данным написать следующие запросы на фильтрацию:</p>
+<ul>
+<li>Выведете все машины марки “Toyota” (или любой другой марки, которая у вас есть)</li>
+</ul>
+<pre><code class="language-python">Car.objects.filter(brand='dragon')
+</code></pre>
+<ul>
+<li>Найти всех водителей с именем “Олег” (или любым другим именем на ваше усмотрение)</li>
+</ul>
+<pre><code class="language-python">Owner.objects.filter(name = &quot;Jaina&quot;)
+</code></pre>
+<ul>
+<li>Взяв любого случайного владельца получить его id, и по этому id получить экземпляр удостоверения в виде объекта модели (можно в 2 запроса)</li>
+</ul>
+<pre><code class="language-python">licence = Licence.objects.get(owner=Owner.objects.order_by('?').first().id) 
+owner = licence.owner
+</code></pre>
+<ul>
+<li>Вывести всех владельцев красных машин (или любого другого цвета, который у вас присутствует)</li>
+</ul>
+<pre><code class="language-python">Owner.objects.filter(cars__color__iexact='grey')
+</code></pre>
+<ul>
+<li>Найти всех владельцев, чей год владения машиной начинается с 2010 (или любой другой год, который присутствует у вас в базе)</li>
+</ul>
+<pre><code class="language-python">Owner.objects.filter(ownership__start_date__gte='2010-01-01T00:00+00:00')
+</code></pre>
+<h2 id="3_1">Практическое задание 3:</h2>
+<p>Необходимо реализовать следующие запросы:</p>
+<ul>
+<li>Вывод даты выдачи самого старшего водительского удостоверения</li>
+</ul>
+<pre><code class="language-python">Licence.objects.aggregate(Min('issue_date'))   
+</code></pre>
+<ul>
+<li>Укажите самую позднюю дату владения машиной, имеющую какую-то из существующих моделей в вашей базе</li>
+</ul>
+<pre><code class="language-python">Ownership.objects.aggregate(Max('expiry_date')) 
+</code></pre>
+<ul>
+<li>Выведите количество машин для каждого водителя</li>
+</ul>
+<pre><code class="language-python">Ownership.objects.values('owner__username').annotate(Count('car'))
+</code></pre>
+<ul>
+<li>Подсчитайте количество машин каждой марки</li>
+</ul>
+<pre><code class="language-python">Car.objects.values('brand').annotate(Count('id'))
+</code></pre>
+<ul>
+<li>Отсортируйте всех автовладельцев по дате выдачи удостоверения (Примечание: чтобы не выводить несколько раз одни и те же таблицы воспользуйтесь методом .distinct()</li>
+</ul>
+<pre><code class="language-python">Licence.objects.order_by('issue_date')
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
